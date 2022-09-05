@@ -9,13 +9,16 @@ const Container = styled(Html)`
 const Dash = styled.div`
   width: 1px;
   height: 1px;
-  border: 5px dashed red;
+  color: #e62a0d;
+  font-size: 24px;
+  font-weight: bolder;
+  text-align: center;
 `;
 
 export const Crosshair = () => {
   return (
     <Container transform={false}>
-      <Dash />
+      <Dash>⊙</Dash>
     </Container>
   );
 };

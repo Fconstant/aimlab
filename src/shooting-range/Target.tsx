@@ -13,7 +13,7 @@ interface TargetProps {
 }
 
 const TargetMaterial = (
-  <meshStandardMaterial color="#7bca18" roughness={0.5} metalness={0.1} />
+  <meshStandardMaterial color="#18a2ca" roughness={0.2} metalness={0} />
 );
 
 export const Target = ({
@@ -24,7 +24,7 @@ export const Target = ({
   onShoot,
 }: TargetProps) => {
   const sphereRef = useRef<Mesh>();
-  const [pointed, setPointed] = useState(false);
+  const pointedRef = useRef(false);
 
   // const handleClick = () => {
   //   const mat = sphereRef.current?.material;
@@ -35,7 +35,7 @@ export const Target = ({
   // };
 
   useFrame(() => {
-    sphereRef.current?.scale.setScalar(pointed ? 1.1 : 1);
+    sphereRef.current?.scale.setScalar(pointedRef.current ? 1.1 : 1);
   });
 
   return (
@@ -47,8 +47,8 @@ export const Target = ({
       receiveShadow={show}
       visible={show}
       onClick={onShoot}
-      onPointerEnter={() => setPointed(true)}
-      onPointerLeave={() => setPointed(false)}
+      onPointerEnter={() => (pointedRef.current = true)}
+      onPointerLeave={() => (pointedRef.current = false)}
     >
       {TargetMaterial}
       {debugData && <DebugPoint label={debugData} position={0} />}
