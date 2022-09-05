@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { KeyBind, useKeybinds } from "../store/Keybinds.store";
+import { KeyBind, useKeybinds } from "@app/store/Keybinds.store";
 
 export function useOnKeyPress(
   onPressKey: (key: string) => void,

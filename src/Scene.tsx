@@ -1,14 +1,15 @@
 import { Canvas } from "@react-three/fiber";
 import { Provider as JotaiProvider } from "jotai";
-import { useMouseRegister } from "./hooks/useMouseRegister";
 import { SceneControls } from "./Scene.Controls";
 import { SceneGround } from "./Scene.Ground";
-import { SceneLightning } from "./Scene.Lightning";
 import { SceneSky } from "./Scene.Sky";
-import { ShootingRange } from "./shooting-range/ShootingRange";
+import { ShootingRange } from "@app/shooting-range";
+import { PerspectiveCamera } from "@react-three/drei";
+import { Crosshair } from "./Crosshair";
+import DebugControl, { DebugGizmo } from "./debug";
 
 export const Scene = () => (
-  <Canvas>
+  <Canvas shadows>
     <JotaiProvider>
       <SceneContent />
     </JotaiProvider>
@@ -16,14 +17,22 @@ export const Scene = () => (
 );
 
 const SceneContent = () => {
-  const { registerMouse } = useMouseRegister();
   return (
-    <group onClick={registerMouse}>
-      <SceneLightning />
+    <>
+      <ambientLight intensity={0.3} />
+      <directionalLight color="white" position={[0, 10, 0]} castShadow />
+
       <SceneSky />
-      <SceneGround />
       <SceneControls />
+
+      <PerspectiveCamera />
+      <Crosshair />
+
+      <DebugControl />
+      <DebugGizmo />
+
+      <SceneGround />
       <ShootingRange />
-    </group>
+    </>
   );
 };

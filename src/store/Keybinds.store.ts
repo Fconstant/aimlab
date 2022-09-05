@@ -3,6 +3,7 @@ import { useCallback } from "react";
 
 export const KeybindAtom = atom({
   toggleControls: "P",
+  toggleDebug: "X",
   exitMouse: ["Esc", "Escape"],
 });
 

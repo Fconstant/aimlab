@@ -1,20 +1,16 @@
-import {
-  FirstPersonControls,
-  OrbitControls,
-  PerspectiveCamera,
-} from "@react-three/drei";
-import { useCallback, useEffect, useRef } from "react";
-import { type FirstPersonControls as FirstPersonControlImpl } from "three-stdlib";
+import { FirstPersonControls, PointerLockControls } from "@react-three/drei";
+import { type PointerLockControls as ThreePointerLockControls } from "three-stdlib";
+import { useEffect, useRef } from "react";
 import { useOnKeyPress } from "./hooks/useOnKeyPress";
-import { useControlMode, useMouseControlData } from "./store/Controls.store";
+import { useControlMode } from "./store/Controls.store";
 import { useSceneData } from "./store/Scene.store";
+import { useThree } from "@react-three/fiber";
 
 export const SceneControls = () => {
-  const fpvRef = useRef<FirstPersonControlImpl | null>(null);
-
-  const { playerPos } = useSceneData();
+  const lockControlsRef = useRef<ThreePointerLockControls | null>(null);
+  const { playerPos, shootingGridPos } = useSceneData();
   const [controlMode, toggleControlMode] = useControlMode();
-  const [{ registered: mouseRegistered }] = useMouseControlData();
+  const { camera } = useThree();
 
   useOnKeyPress(() => {
     toggleControlMode();
@@ -22,25 +18,19 @@ export const SceneControls = () => {
 
   useEffect(() => {
     if (controlMode === "first-person") {
-      fpvRef.current?.object.position.copy(playerPos);
+      camera.position.set(...playerPos.clone().toArray());
+      camera.lookAt(shootingGridPos);
     }
-  }, [controlMode, playerPos]);
+  }, [controlMode]);
 
   return (
     <>
-      <PerspectiveCamera />
-      {controlMode === "first-person" && (
-        <FirstPersonControls
-          ref={fpvRef}
-          position={playerPos}
-          lookSpeed={0.2}
-          constrainVertical
-          heightSpeed
-          activeLook={mouseRegistered}
-          movementSpeed={0}
-        />
+      {controlMode === "free-look" && (
+        <FirstPersonControls lookSpeed={0.2} heightSpeed movementSpeed={2} />
       )}
-      {controlMode === "free-look" && <OrbitControls />}
+      {controlMode === "first-person" && (
+        <PointerLockControls ref={lockControlsRef} />
+      )}
     </>
   );
 };

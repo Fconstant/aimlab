@@ -7,8 +7,8 @@ export const SceneAtom = atom((get) => {
   return {
     origin,
     playerPos: origin.clone(),
-    groundPos: origin.clone().add(new Vector3(0, -2, 0)),
-    shootingGridPos: origin.clone().add(new Vector3(0, 0, 3)),
+    groundPos: origin.clone().add(new Vector3(0, -3, 0)),
+    shootingGridPos: origin.clone().add(new Vector3(0, 0, -8)),
   };
 });
 
