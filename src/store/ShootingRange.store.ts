@@ -1,51 +1,66 @@
-import { atom, useAtomValue } from "jotai";
-import { Vector3 } from "three";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { Vector2Tuple } from "three";
 import { SceneAtom } from "@app/store/Scene.store";
+import {
+  generateRandomTarget,
+  getInitialState,
+  isRenderedOn,
+  TargetRenderSelection,
+} from "./ShootingRange.helpers";
+import { useCallback, useInsertionEffect } from "react";
 
-const ShootingRangeAtom = atom((get) => {
-  const targetRadius = 0.5;
-  const gap = 1;
-  return {
-    position: get(SceneAtom).shootingGridPos,
-    grid: {
-      gap: Math.max(targetRadius, gap),
-      size: [5, 4] as [number, number],
-    },
-    target: {
-      radius: 0.5,
-    },
-  };
-});
+// primitive atoms
+const ShootingRangePrimitive = atom(getInitialState());
+const TargetRenderPrimitive = atom([] as TargetRenderSelection);
 
-export interface Target {
-  pos: Vector3;
-  hasTarget: boolean;
-  radius?: number;
-}
+// read-only atoms
+const ShootingRangeOriginAtom = atom((get) => get(SceneAtom).shootingGridPos);
 
-const TargetMatrixAtom = atom((get) => {
-  const { position: origin, grid, target } = get(ShootingRangeAtom);
-
-  const [columns, rows] = grid.size;
-  const matrix = Array(columns)
+// write-only atoms
+const GenerateTargetAtom = atom(void 0, (get, set, howManyToAdd: number) => {
+  const renderSet = get(TargetRenderPrimitive);
+  const { grid } = get(ShootingRangePrimitive);
+  const hasValueOn = (pos: Vector2Tuple) => isRenderedOn(pos, renderSet);
+  const newTargets = Array(Math.min(howManyToAdd, grid.size[0] * grid.size[1]))
     .fill(0)
-    .map((_, columnNum) =>
-      Array(rows)
-        .fill(0)
-        .map((_, rowNum) => {
-          const pos = new Vector3(
-            columnNum * target.radius + grid.gap * columnNum,
-            rowNum * target.radius + grid.gap * rowNum,
-            0
-          );
-          return {
-            hasTarget: columnNum === rowNum,
-            pos,
-          } as Target;
-        })
-    );
-  return { matrix, size: grid.size, origin, targetRadius: target.radius };
+    .map(() => generateRandomTarget(grid.size, hasValueOn));
+  set(TargetRenderPrimitive, [...renderSet, ...newTargets]);
+});
+const DestroyTargetAtom = atom(void 0, (get, set, which: Vector2Tuple) => {
+  const prev = get(TargetRenderPrimitive);
+  set(
+    TargetRenderPrimitive,
+    prev.filter((p) => p[0] !== which[0] || p[1] !== which[1])
+  );
 });
 
-export const useShootingRangeStore = () => useAtomValue(ShootingRangeAtom);
-export const useShootingRangeTargets = () => useAtomValue(TargetMatrixAtom);
+export const useShootingRange = () => {
+  const origin = useAtomValue(ShootingRangeOriginAtom);
+  const { target, grid, matrix } = useAtomValue(ShootingRangePrimitive);
+  const renderSet = useAtomValue(TargetRenderPrimitive);
+
+  const [, destroyTarget] = useAtom(DestroyTargetAtom);
+  const [, generateTargets] = useAtom(GenerateTargetAtom);
+
+  useInsertionEffect(() => {
+    console.log(renderSet);
+    if (renderSet.length < target.minCount) {
+      generateTargets(target.minCount - renderSet.length);
+    }
+  }, [renderSet.length, target.minCount]);
+
+  const isRendered = useCallback(
+    (col: number, row: number) => isRenderedOn([col, row], renderSet),
+    [renderSet]
+  );
+
+  return {
+    origin,
+    target,
+    isRendered,
+    grid,
+    matrix,
+    destroyTarget,
+    generateTarget: () => generateTargets(1),
+  };
+};
