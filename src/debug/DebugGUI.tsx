@@ -1,8 +1,7 @@
 import { Html } from "@react-three/drei";
 import styled from "styled-components";
 import { Fragment } from "react";
-import Env from "@app/Env";
-import { useDebugState } from "@app/store/Debug.store";
+import { OnlyDebug } from "./OnlyDebug";
 
 const Root = styled.div`
   border-radius: 4px;
@@ -28,20 +27,21 @@ interface DebugGUIProps extends React.PropsWithChildren {
 }
 
 export const DebugGUI = ({ table, children }: DebugGUIProps) => {
-  if (!useDebugState().isEnabled) return null;
   return (
-    <Html transform={false}>
-      <Root>
-        <TableRoot>
-          {Object.entries(table).map((v, k) => (
-            <Fragment key={k}>
-              <TKey>{k}</TKey>
-              <TVal>{v}</TVal>
-            </Fragment>
-          ))}
-        </TableRoot>
-        {children}
-      </Root>
-    </Html>
+    <OnlyDebug>
+      <Html transform={false}>
+        <Root>
+          <TableRoot>
+            {Object.entries(table).map((v, k) => (
+              <Fragment key={k}>
+                <TKey>{k}</TKey>
+                <TVal>{v}</TVal>
+              </Fragment>
+            ))}
+          </TableRoot>
+          {children}
+        </Root>
+      </Html>
+    </OnlyDebug>
   );
 };

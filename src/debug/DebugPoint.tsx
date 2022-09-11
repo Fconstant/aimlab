@@ -1,8 +1,7 @@
-import Env from "@app/Env";
-import { useDebugState } from "@app/store/Debug.store";
 import { Html } from "@react-three/drei";
 import { Vector3 } from "@react-three/fiber";
 import styled from "styled-components";
+import { OnlyDebug } from "./OnlyDebug";
 
 const HtmlContainer = styled(Html)`
   pointer-events: none;
@@ -30,11 +29,10 @@ export const DebugPoint = ({
   position,
   label,
   color = "white",
-}: DebugPointProps) => {
-  if (!useDebugState().isEnabled) return null;
-  return (
+}: DebugPointProps) => (
+  <OnlyDebug>
     <HtmlContainer position={position}>
       <Label bg={color}>{label}</Label>
     </HtmlContainer>
-  );
-};
+  </OnlyDebug>
+);

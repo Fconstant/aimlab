@@ -1,10 +1,9 @@
-import { useDebugState } from "@app/store/Debug.store";
-import { GizmoHelper, GizmoViewcube, GizmoViewport } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport } from "@react-three/drei";
+import { OnlyDebug } from "./OnlyDebug";
 
 export const DebugGizmo = () => {
-  if (!useDebugState().isEnabled) return null;
   return (
-    <>
+    <OnlyDebug>
       <GizmoHelper
         alignment="bottom-left" // widget alignment within scene
         margin={[80, 80]} // widget margins (X, Y)
@@ -14,6 +13,6 @@ export const DebugGizmo = () => {
           labelColor="black"
         />
       </GizmoHelper>
-    </>
+    </OnlyDebug>
   );
 };
