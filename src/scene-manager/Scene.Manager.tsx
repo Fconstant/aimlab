@@ -1,5 +1,6 @@
 import { useOnKeyPress } from "@app/hooks";
 import { MenuScene } from "@app/menu";
+import { SceneBgColor as MenuSceneBg } from "@app/menu/Scene.Colors";
 import { ShootingRangeScene } from "@app/shooting-range";
 import { useThree } from "@react-three/fiber";
 import { useCallback, useInsertionEffect } from "react";
@@ -15,10 +16,12 @@ export const SceneManager = () => {
   useInsertionEffect(() => {
     switch (scene) {
       case "menu":
-        gl.setClearColor("gray");
+        gl.setClearColor(MenuSceneBg);
         return;
       case "shooting-range":
         gl.setClearColor("white");
+        return;
+      default:
         return;
     }
   }, [scene]);

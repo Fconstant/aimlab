@@ -5,6 +5,7 @@ export const DebugGizmo = () => {
   return (
     <OnlyDebug>
       <GizmoHelper
+        visible={false}
         alignment="bottom-left" // widget alignment within scene
         margin={[80, 80]} // widget margins (X, Y)
       >

@@ -1,12 +1,14 @@
-import { useThree } from "@react-three/fiber";
 import { SceneGround } from "./Ground";
+import { useColorTransition } from "./useColorTransition";
 
 export const Scene = () => {
+  useColorTransition();
+
   return (
     <>
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.3} />
       {/* <pointLight position={[0, 0, 0]} color="white" /> */}
-      <directionalLight color="white" position={[0, 10, 0]} castShadow />
+      <directionalLight color="white" position={[0, 10, 0]} />
       <SceneGround />
     </>
   );

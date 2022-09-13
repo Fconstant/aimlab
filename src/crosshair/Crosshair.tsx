@@ -1,23 +1,21 @@
 import { Html } from "@react-three/drei";
 import styled from "styled-components";
 
-const Container = styled(Html)`
+const HtmlContainer = styled(Html)`
   pointer-events: none;
 `;
 
 const Dash = styled.div`
-  width: 1px;
-  height: 1px;
   color: #e62a0d;
-  font-size: 24px;
-  font-weight: bolder;
+  font-size: 32px;
+  font-weight: lighter;
   text-align: center;
 `;
 
 export const Crosshair = () => {
   return (
-    <Container transform={false}>
-      <Dash>⊙</Dash>
-    </Container>
+    <HtmlContainer transform={false}>
+      <Dash>&#10011;</Dash>
+    </HtmlContainer>
   );
 };

@@ -10,7 +10,7 @@ export const Canvas = () => {
     <ThreeCanvas shadows>
       <JotaiProvider>
         <IncludeDebug />
-        <PerspectiveCamera />
+        <PerspectiveCamera args={[60]} />
         <Crosshair />
         <SceneManager />
       </JotaiProvider>

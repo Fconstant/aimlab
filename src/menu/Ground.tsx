@@ -1,33 +1,34 @@
 import { usePositionData } from "@app/store/Positions.store";
-import { Point, Points, Sphere } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { useVertices } from "./useVertices";
+import { useLayoutEffect, useRef } from "react";
+import { PointsMaterial } from "three";
+import { GroundColor } from "./Scene.Colors";
+// import { useVertices } from "./useVertices";
 
-const SphereMat = <meshStandardMaterial color="white" />;
+const PLANE_SIZE = [20, 20] as [number, number];
 
 export const SceneGround = () => {
   const { groundPos } = usePositionData();
-  const vertPos = useVertices(50, 50);
+  const pointsMaterialRef = useRef<PointsMaterial>(null);
 
-  useFrame(() => {});
+  useLayoutEffect(() => {
+    if (pointsMaterialRef.current) {
+      pointsMaterialRef.current.color = GroundColor;
+    }
+  }, [pointsMaterialRef.current]);
+
   return (
-    <Points
-      limit={500}
-      range={500}
-      position={groundPos.clone().add(new Vector3(0, -10, 0))}
-    >
-      <pointsMaterial vertexColors />
-      {vertPos.map((pos) => (
-        <Sphere args={[0.5, 8, 8]} position={pos}>
-          {SphereMat}
-        </Sphere>
-      ))}
-    </Points>
+    <points position={groundPos} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[...PLANE_SIZE, 64, 64]} />
+      <pointsMaterial
+        ref={pointsMaterialRef}
+        args={[
+          {
+            color: GroundColor,
+          },
+        ]}
+        colorWrite
+        size={0.05}
+      />
+    </points>
   );
 };
-
-/* <points position={groundPos} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[...PLANE_SIZE, ...PLANE_SEGMENTS]} />
-        <pointsMaterial vertexColors />
-       </points> */
