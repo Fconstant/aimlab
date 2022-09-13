@@ -1,8 +1,8 @@
 import { DebugPoint } from "@app/debug";
 import { Sphere } from "@react-three/drei";
 import { useFrame, Vector3 } from "@react-three/fiber";
-import { useRef, useState } from "react";
-import { Color, Mesh, MeshStandardMaterial } from "three";
+import { useRef } from "react";
+import { Mesh } from "three";
 
 interface TargetProps {
   position: Vector3;
@@ -25,14 +25,6 @@ export const Target = ({
 }: TargetProps) => {
   const sphereRef = useRef<Mesh>();
   const pointedRef = useRef(false);
-
-  // const handleClick = () => {
-  //   const mat = sphereRef.current?.material;
-  //   if (mat instanceof MeshStandardMaterial) {
-  //     mat.color = new Color("red");
-  //     onShoot?.();
-  //   }
-  // };
 
   useFrame(() => {
     sphereRef.current?.scale.setScalar(pointedRef.current ? 1.1 : 1);

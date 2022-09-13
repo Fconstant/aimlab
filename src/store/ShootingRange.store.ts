@@ -1,6 +1,6 @@
 import { atom, useAtom, useAtomValue } from "jotai";
 import { Vector2Tuple } from "three";
-import { SceneAtom } from "@app/store/Scene.store";
+import { PositionsAtom } from "./Positions.store";
 import {
   generateRandomTarget,
   getInitialState,
@@ -14,7 +14,9 @@ const ShootingRangePrimitive = atom(getInitialState());
 const TargetRenderPrimitive = atom([] as TargetRenderSelection);
 
 // read-only atoms
-const ShootingRangeOriginAtom = atom((get) => get(SceneAtom).shootingGridPos);
+const ShootingRangeOriginAtom = atom(
+  (get) => get(PositionsAtom).shootingGridPos
+);
 
 // write-only atoms
 const GenerateTargetAtom = atom(void 0, (get, set, howManyToAdd: number) => {

@@ -1,10 +1,10 @@
+import { usePositionData } from "@app/store/Positions.store";
 import { Plane } from "@react-three/drei";
-import { useSceneData } from "./store/Scene.store";
 
 const PLANE_SIZE = [20, 20] as [number, number];
 
 export const SceneGround = () => {
-  const { groundPos } = useSceneData();
+  const { groundPos } = usePositionData();
   return (
     <>
       <Plane

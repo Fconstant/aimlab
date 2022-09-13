@@ -1,1 +1,1 @@
-export { ShootingRange } from "./ShootingRange";
+export { Scene as ShootingRangeScene } from "./Scene";

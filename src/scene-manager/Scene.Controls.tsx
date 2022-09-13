@@ -1,14 +1,14 @@
 import { FirstPersonControls, PointerLockControls } from "@react-three/drei";
-import { type PointerLockControls as ThreePointerLockControls } from "three-stdlib";
-import { useEffect, useRef } from "react";
-import { useOnKeyPress } from "./hooks/useOnKeyPress";
-import { useControlMode } from "./store/Controls.store";
-import { useSceneData } from "./store/Scene.store";
+// import { type PointerLockControls as ThreePointerLockControls } from "three-stdlib";
+import { useEffect } from "react";
+import { useOnKeyPress } from "@app/hooks/useOnKeyPress";
+import { useControlMode } from "@app/store/Controls.store";
+import { usePositionData } from "@app/store/Positions.store";
 import { useThree } from "@react-three/fiber";
 
 export const SceneControls = () => {
-  const lockControlsRef = useRef<ThreePointerLockControls | null>(null);
-  const { playerPos, shootingGridPos } = useSceneData();
+  // const lockControlsRef = useRef<ThreePointerLockControls | null>(null);
+  const { playerPos, shootingGridPos } = usePositionData();
   const [controlMode, toggleControlMode] = useControlMode();
   const { camera } = useThree();
 
@@ -28,9 +28,7 @@ export const SceneControls = () => {
       {controlMode === "free-look" && (
         <FirstPersonControls lookSpeed={0.2} heightSpeed movementSpeed={2} />
       )}
-      {controlMode === "first-person" && (
-        <PointerLockControls ref={lockControlsRef} />
-      )}
+      {controlMode === "first-person" && <PointerLockControls />}
     </>
   );
 };
