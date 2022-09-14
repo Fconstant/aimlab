@@ -3,7 +3,6 @@ import { CommandMenu } from "./CommandMenu";
 import { Crosshair } from "./Crosshair";
 import { ExitIndicator } from "./ExitIndicator";
 import { Score } from "./Score";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const HUDRoot = styled.div`
   position: absolute;
