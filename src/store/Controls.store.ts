@@ -1,8 +1,9 @@
-import { atom, useAtom, useAtomValue } from "jotai";
-import { useCallback } from "react";
+import { atomWithToggle } from "@app/atoms";
+import { atom, useAtom } from "jotai";
 
 export type ControlMode = "first-person" | "free-look";
 
+const LockStateAtom = atomWithToggle(false);
 const ControlsAtom = atom<ControlMode>("first-person");
 const ToggleControlAtom = atom(
   (get) => get(ControlsAtom),
@@ -12,9 +13,9 @@ const ToggleControlAtom = atom(
   }
 );
 
-export const useControlMode = () => useAtom(ToggleControlAtom);
-
-const MouseControlAtom = atom({
-  registered: false,
-});
-export const useMouseControlData = () => useAtom(MouseControlAtom);
+export const useControls = () => {
+  return {
+    controlMode: useAtom(ToggleControlAtom),
+    lockState: useAtom(LockStateAtom),
+  };
+};

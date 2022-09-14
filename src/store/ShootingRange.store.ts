@@ -8,6 +8,7 @@ import {
   TargetRenderSelection,
 } from "./ShootingRange.helpers";
 import { useCallback, useInsertionEffect } from "react";
+import { ScoreAtom, useScore } from "./Score.store";
 
 // primitive atoms
 const ShootingRangePrimitive = atom(getInitialState());
@@ -34,6 +35,7 @@ const DestroyTargetAtom = atom(void 0, (get, set, which: Vector2Tuple) => {
     TargetRenderPrimitive,
     prev.filter((p) => p[0] !== which[0] || p[1] !== which[1])
   );
+  set(ScoreAtom, get(ScoreAtom) + 1);
 });
 
 export const useShootingRange = () => {

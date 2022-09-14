@@ -1,8 +1,8 @@
 import { DebugPoint } from "@app/debug";
-import { Sphere } from "@react-three/drei";
+import { MeshDistortMaterial, Sphere } from "@react-three/drei";
 import { useFrame, Vector3 } from "@react-three/fiber";
-import { useRef } from "react";
-import { Mesh } from "three";
+import { useMemo, useRef } from "react";
+import { MathUtils, Mesh, MeshPhysicalMaterial } from "three";
 
 interface TargetProps {
   position: Vector3;
@@ -12,9 +12,24 @@ interface TargetProps {
   onShoot?: () => void;
 }
 
-const TargetMaterial = (
-  <meshStandardMaterial color="#18a2ca" roughness={0.2} metalness={0} />
-);
+const DEFAULT_ROUGHNESS = 0.7;
+const DEFAULT_METALNESS = 0.5;
+
+const useTargetMaterial = () => {
+  return useMemo(
+    () => (
+      <MeshDistortMaterial
+        attach="material"
+        color="#18a2ca"
+        roughness={DEFAULT_ROUGHNESS}
+        metalness={DEFAULT_METALNESS}
+        distort={0.2} // Strength, 0 disables the effect (default=1)
+        speed={MathUtils.randFloat(2, 5)} // Speed (default=1)
+      />
+    ),
+    []
+  );
+};
 
 export const Target = ({
   position,
@@ -26,8 +41,18 @@ export const Target = ({
   const sphereRef = useRef<Mesh>();
   const pointedRef = useRef(false);
 
+  const TargetMaterial = useTargetMaterial();
+
   useFrame(() => {
-    sphereRef.current?.scale.setScalar(pointedRef.current ? 1.1 : 1);
+    const isPointing = pointedRef.current;
+    if (sphereRef.current) {
+      const { scale, material: rawMaterial } = sphereRef.current;
+      const material = rawMaterial as MeshPhysicalMaterial;
+
+      scale.setScalar(isPointing ? 1.1 : 1);
+      material.metalness = isPointing ? 0.7 : DEFAULT_METALNESS;
+      material.roughness = isPointing ? 0.5 : DEFAULT_ROUGHNESS;
+    }
   });
 
   return (
@@ -43,7 +68,7 @@ export const Target = ({
       onPointerLeave={() => (pointedRef.current = false)}
     >
       {TargetMaterial}
-      {debugData && <DebugPoint label={debugData} position={0} />}
+      {debugData && <DebugPoint label={debugData} position={[0, 0, 0]} />}
     </Sphere>
   );
 };

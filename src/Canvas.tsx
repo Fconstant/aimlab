@@ -1,19 +1,21 @@
 import { SceneManager } from "./scene-manager";
-import { Provider as JotaiProvider } from "jotai";
 import { Canvas as ThreeCanvas } from "@react-three/fiber";
 import IncludeDebug from "./debug";
-import { PerspectiveCamera } from "@react-three/drei";
-import { Crosshair } from "./crosshair";
+import { PerspectiveCamera, useContextBridge } from "@react-three/drei";
+import HUD from "./hud";
+import { useState } from "react";
 
 export const Canvas = () => {
+  const [loaded, setLoaded] = useState(false);
+  useContextBridge();
   return (
-    <ThreeCanvas shadows>
-      <JotaiProvider>
+    <>
+      {loaded && <HUD />}
+      <ThreeCanvas shadows onCreated={() => setLoaded(true)}>
         <IncludeDebug />
         <PerspectiveCamera args={[60]} />
-        <Crosshair />
         <SceneManager />
-      </JotaiProvider>
-    </ThreeCanvas>
+      </ThreeCanvas>
+    </>
   );
 };

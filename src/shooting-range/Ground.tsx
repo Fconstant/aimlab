@@ -11,8 +11,9 @@ export const SceneGround = () => {
         args={[...PLANE_SIZE]}
         position={groundPos}
         rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow
       >
-        <meshStandardMaterial roughness={0.8} metalness={0.2} color="#448414" />
+        <meshStandardMaterial roughness={0.7} metalness={0.5} color="#E2E2E2" />
       </Plane>
     </>
   );
