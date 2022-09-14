@@ -1,4 +1,3 @@
-import Env from "@app/Env";
 import { atom, useAtom } from "jotai";
 import { useCallback } from "react";
 

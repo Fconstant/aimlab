@@ -4,11 +4,11 @@ import { useCallback } from "react";
 export const KeybindAtom = atom({
   toggleControls: "P",
   toggleDebug: "X",
-  exitMouse: ["Esc", "Escape"],
+  toggleMenu: "M",
 });
 
-export type KeybindMap = typeof KeybindAtom.init;
-export type KeyBind = keyof KeybindMap;
+export type KeyBindMap = typeof KeybindAtom.init;
+export type KeyBind = keyof KeyBindMap;
 
 export const useKeybinds = () => {
   const bindMap = useAtomValue(KeybindAtom);
@@ -26,5 +26,5 @@ export const useKeybinds = () => {
     },
     [bindMap, getBindOf]
   );
-  return { getBindOf, isBindOf };
+  return { getBindOf, isBindOf, bindMap };
 };
